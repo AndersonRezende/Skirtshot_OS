@@ -4,23 +4,16 @@
 [bits 16]
 
 _start:
+    mov si, msg
     call print
+    call print_nl
+    call switch_to_32bit
     jmp $
 
-print:
-    pusha
-    mov si, msg
-    mov ah, 0x0e
-    .print_loop:
-        mov al, [si]
-        cmp al, 0
-        je .end_print
-        int 0x10
-        inc si
-        jne .print_loop
-    .end_print
-        popa
-        ret
+
+%include "src/print-16.asm"
+%include "src/gdt.asm"
+%include "src/switch_to_32bit.asm"
 
 msg db 'Skirtshot OS',0
 

@@ -20,3 +20,7 @@ Para executar, basta dar permissão de execução ao script compiler.sh e depois
 $ sudo chmod +x compiler.sh
 $ ./compiler bootloader
 ```
+
+## Modo real x Modo protegido
+O modo real é o modo de operação inicial dos processadores x86. Nesse modo, o processador opera em um ambiente onde não há proteção de memória entre os diferentes processos e o S.O. O endereçamento é feito utilizando segmentação de 16 bits e endereços físicos. As ínterrupções tem acesso direto ao hardware e memória do sistema e não há suporte a multitarefas e nem recursos de proteção de memória.
+O modo protegido é um modo de inicialização mais avançada dos processadores x86 que pode ser confiugrada após a inicialização do sistema. Nesse modo, o processador opera em um ambiente onde a memória é protegida e segmentada em segmentos lógicos, cada um com suas próprias permissões. Esse modo permite o uso do GDT (Global Descriptor Table), uma estrutura de dados binária que possibilita controlar o acesso a diferentes partes da memória. As instruções nesse modo tem acesso a recursos avançados como multitarefa, proteção de memória e memória virtual.
