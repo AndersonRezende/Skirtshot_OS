@@ -15,3 +15,4 @@ cdcontents
 *.iso
 *.bin
 *.img
+*.o

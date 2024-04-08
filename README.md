@@ -1,6 +1,20 @@
 # Skirtshot_OS
 Projeto de sistema operacional.
 
+## Instalação
+A instalação consiste em clonar e instalar algumas ferramentas para fazer a compilação cruzada.
+```sh
+$ git clone https://github.com/AndersonRezende/Skirtshot_OS.git
+$ cd Skirtshot_OS/setup
+$ ./setup-gcc-debian.sh
+```
+
+## Execução
+Para executar, basta executar o arquivo "compiler.sh".
+```sh
+$ ./compiler
+```
+
 ## Bootloader
 Bootloader é um pequeno software que executa o papel de carregar e preparar um sistema operacional ao inicializar um computador.
 Suas funções são:
@@ -13,13 +27,6 @@ Após a inicialização do computador, a BIOS (Basic Input/Output System) assume
 - Verificação do setor de inicialização (boot sector): em cada disco que a BIOS estiver checando, ela vai procurar no primeiro setor (512 bytes), também conhecido como MasterBootRecord (MBR), se o mesmo possui a assinatura de inicialização, também conhecido como número mágico.
 - Identificação do disco inicializável (bootable): A BIOS verifica se o boot sector contém o número mágico 0xAA55 nos dois últimos bytes do primeiro setor (511 e 512). Caso o disco possua, então ele é considerado inicializável.
 - Carregar o bootloader: a BIOS carrega o código de inicialização contido no MBR do dispositivo para a RAM, no endereço 0000h:7C00h, e repassa o controle do sistema para o mesmo.
-
-## Execução
-Para executar, basta dar permissão de execução ao script compiler.sh e depois executar com o parametro do nome do bootloader.
-```sh
-$ sudo chmod +x compiler.sh
-$ ./compiler bootloader
-```
 
 ## Modo real x Modo protegido
 O modo real é o modo de operação inicial dos processadores x86. Nesse modo, o processador opera em um ambiente onde não há proteção de memória entre os diferentes processos e o S.O. O endereçamento é feito utilizando segmentação de 16 bits e endereços físicos. As ínterrupções tem acesso direto ao hardware e memória do sistema e não há suporte a multitarefas e nem recursos de proteção de memória.
