@@ -1,7 +1,7 @@
 switch_to_32bit:
 	; Linha A20 é uma linha de endereço de memória no barramento de endereço do processador x86. Ela refere-se ao bit 20 do endereço físico da memória.
-	;mov ax, 0x2401
-    ;int 0x15 ; Habilita o A20 bit.
+	mov ax, 0x2401
+    int 0x15 ; Habilita o A20 bit.
 
     ; Entra no modo texto VGA
     mov ah, 0x00

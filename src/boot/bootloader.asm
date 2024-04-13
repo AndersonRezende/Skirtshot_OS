@@ -1,9 +1,12 @@
 [ORG 0x7c00]                        ; Endereço inicial que a BIOS devolve ao encontrar o bootloader
 [bits 16]                           ; Execução em modo real 16 bits
 
-mov [BOOT_DISK], dl                 ; A bios coloca o disco atual do registrador dl. Armazena o disco nesse identificador para utiliza-lo depois caso seja substituido ao longo do processo.
+mov [BOOT_DISK], dl                 ; O BIOS coloca o disco atual do registrador dl. Armazena o disco nesse identificador para utiliza-lo depois caso seja substituido ao longo do processo.
 
 KERNEL_LOCATION equ 0x1000
+mov bp, 0x9000
+mov sp, bp
+
 BOOT_DISK: db 0
 
 _start:
@@ -18,10 +21,10 @@ _start:
     jmp $                           ; Loop caso retorne
 
 
-%include "src/print-16.asm"
-%include "src/disk.asm"
-%include "src/gdt.asm"
-%include "src/switch_to_32bit.asm"
+%include "src/boot/print-16.asm"
+%include "src/boot/disk.asm"
+%include "src/boot/gdt.asm"
+%include "src/boot/switch_to_32bit.asm"
 
 msg db 'Skirtshot OS',0
 
