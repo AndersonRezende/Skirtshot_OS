@@ -22,15 +22,22 @@ int get_cursor() {
     return offset;
 }
 
+int get_screen_offset_from_row_col(int row, int col) {
+    return col + row * MAX_COLS;
+}
+
+int get_row_from_offset(int offset) {
+    return offset / MAX_COLS;
+}
+
+int move_offset_to_next_line(int offset) {
+    return get_screen_offset_from_row_col( 
+        get_row_from_offset(offset) + 1, 0);
+}
 
 void set_char_at_video_memory(char character, int offset) {
     short* vga = (short*) VIDEO_ADDRESS;
     vga[offset] = character | 0xf100; 
-}
-
-
-int get_screen_offset_from_row_col(int row, int col) {
-    return col + row * MAX_COLS;
 }
 
 void print_string(char *string) {
@@ -38,8 +45,12 @@ void print_string(char *string) {
     int i = 0;
     while (string[i] != 0)
     {
-        set_char_at_video_memory(string[i], offset);
-        offset++;
+        if (string[i] == '\n') {
+            offset = move_offset_to_next_line(offset);
+        } else {
+            set_char_at_video_memory(string[i], offset);
+            offset++;
+        }
         i++;   
     }
     set_cursor(offset);
