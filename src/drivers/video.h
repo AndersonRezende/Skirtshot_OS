@@ -13,3 +13,4 @@ int get_screen_offset_from_row_col(int row, int col);
 int get_row_from_offset(int offset);
 void set_char_at_video_memory(char character, int offset);
 void print_string(char *string);
+void clear_screen();
