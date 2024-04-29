@@ -1,13 +1,13 @@
-#include "ports.h"
 #include "video.h"
+#include "ports.h"
 
+void set_cursor(int offset) {
     /* O controlador CRT (VGA 0x3d4) usa um único registro de dados (0x3d5).
      * O controlador usa um registro de índice para determinar o tipo
      * de dado no registro de dados.
      * Os tipos de dado 0x0e e 0x0f representam a posição alta e baixa do
      * cursor.
     */
-void set_cursor(int offset) {
     port_byte_out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
     port_byte_out(VGA_DATA_REGISTER, (unsigned char) offset >> 8);
     port_byte_out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
@@ -32,8 +32,7 @@ int get_row_from_offset(int offset) {
 }
 
 int move_offset_to_next_line(int offset) {
-    return get_screen_offset_from_row_col( 
-        get_row_from_offset(offset) + 1, 0);
+    return get_screen_offset_from_row_col(get_row_from_offset(offset) + 1, 0);
 }
 
 void set_char_at_video_memory(char character, int offset) {
@@ -55,7 +54,7 @@ void memory_copy(short *source, short *dest, int nbytes) {
     }
 }
 
-int scroll_ln(int offset) {
+int scroll_nl(int offset) {
     /* Pega a posição (offset) da segunda linha em diate, coloca os dados na
     * posição da linha anterior. Como cada posição representa um short (2 bytes)
     * sendo um para a coloração e outro para o caractere, multiplica por 2 para 
@@ -73,7 +72,8 @@ int scroll_ln(int offset) {
             ' ', 
             get_screen_offset_from_row_col(MAX_ROWS - 1, col));
     }
-    return MAX_COLS * MAX_ROWS - MAX_COLS;
+    return MAX_COLS * (MAX_ROWS - 2);
+    //return offset - 2 * MAX_COLS;
 }
 
 void clear_screen() {
@@ -89,7 +89,7 @@ void print_string(char *string) {
     while (string[i] != 0)
     {
         if (offset > MAX_COLS * MAX_ROWS - 1) {
-            offset = scroll_ln(offset);
+            offset = scroll_nl(offset);
         }
         if (string[i] == '\n') {
             offset = move_offset_to_next_line(offset);
@@ -100,4 +100,9 @@ void print_string(char *string) {
         i++;   
     }
     set_cursor(offset);
+}
+
+void print_nl() {
+    int offset = get_cursor();
+    move_offset_to_next_line(offset);
 }

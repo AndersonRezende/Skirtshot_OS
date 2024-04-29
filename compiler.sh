@@ -19,6 +19,7 @@ function compile() {
 	# Compila os arquivos .asm
 	nasm "src/boot/bootloader.asm" -f bin -o "output/bin/bootloader.bin"
 	nasm "src/boot/kernel_entry.asm" -f elf -o "output/bin/kernel_entry.o"
+	nasm "src/cpu/interrupt.asm" -f elf -o "output/bin/interrupt.o"
 	
 	# Compila os arquivos .c
 	C_FILES=$(find src -name "*.c")
@@ -32,7 +33,7 @@ function compile() {
 	#i386-elf-gcc -ffreestanding -m32 -g -c "src/kernel.c" -o "output/bin/kernel.o"
 	
 	# Linka os arquivos gerados
-	i386-elf-ld -o "output/bin/full_kernel.bin" -Ttext 0x1000 "output/bin/kernel_entry.o" "output/bin/kernel.o" "output/bin/ports.o" "output/bin/video.o" --oformat binary
+	i386-elf-ld -o "output/bin/full_kernel.bin" -Ttext 0x1000 "output/bin/kernel_entry.o" "output/bin/kernel.o" "output/bin/interrupt.o" "output/bin/video.o" "output/bin/keyboard.o" "output/bin/ports.o" "output/bin/idt.o" "output/bin/isr.o" --oformat binary
 	
 	# Une o arquivo do bootloader com o do kernel
 	cat "output/bin/bootloader.bin" "output/bin/full_kernel.bin" > "output/bin/OS.bin"
@@ -43,7 +44,7 @@ function create_iso() {
 	# Cria um disco floppy inicialmente zerado com o equivalente a 1.44MB
 	dd if=/dev/zero of=OS.img bs=1024 count=1440
 	# Coloca o binário dentro do primeiro setor da imagem floppy criada, com o tamanho padrão de 512 bytes (padrão do MBR) e especifica o primeiro setor do disco.
-	dd if=output/bin/OS.bin of=OS.img seek=0 count=3 conv=notrunc
+	dd if=output/bin/OS.bin of=OS.img seek=0 count=31 conv=notrunc
 	# Move a imagem para dentro da pasta auxiliar e gera uma iso bootável 
 	mv OS.img iso_temp/
 	genisoimage -quiet -V 'Skirtshot OS' -input-charset iso8859-1 -o output/OS.iso -b OS.img -hide OS.img iso_temp/

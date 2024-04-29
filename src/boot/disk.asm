@@ -1,7 +1,7 @@
 disk_load:
     pusha
     mov ah, 0x02               ; Modo leitura.
-    mov al, 0x02               ; Número de setores a serem lidos.
+    mov al, 0x31               ; Número de setores a serem lidos.
     mov ch, 0x00               ; Número do cilindro.
     mov dh, 0x00               ; Número da cabeça do disco (head).
     mov cl, 0x02               ; Número do setor que será lido (o setor 1 é onde está o boot).
